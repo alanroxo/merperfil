@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Interativo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container my-5">
+        <div class="card" id="profileCard">
+            <div class="card-body text-center">
+                <img src="https://via.placeholder.com/150" alt="Imagem de Perfil" id="profileImage" class="rounded-circle mb-3" style="width: 150px; cursor: pointer;" onclick="document.getElementById('imageInput').click()">
+                <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="alterarFoto(this)">
+                <h3 id="profileName">Nome: Meu Perfil</h3>
+                <p id="profileAge">Idade: 18</p>
+                <h5>Hobbies:</h5>
+                <ul id="hobbiesList" class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Leitura 
+                        <button class="btn btn-sm btn-danger" onclick="removerHobby(this)">Excluir</button>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Esportes 
+                        <button class="btn btn-sm btn-danger" onclick="removerHobby(this)">Excluir</button>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Música 
+                        <button class="btn btn-sm btn-danger" onclick="removerHobby(this)">Excluir</button>
+                    </li>
+                </ul>
+                <button class="btn btn-primary me-2" onclick="alterarNome()">Alterar Nome</button>
+                <button class="btn btn-success me-2" onclick="adicionarHobby()">Adicionar Hobby</button>
+                <button class="btn btn-warning me-2" onclick="mudarCorDeFundo()">Mudar Cor de Fundo</button>
+                <button class="btn btn-danger me-2" onclick="resetarPagina()">Resetar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const estadoInicial = {
+            nome: "Meu Perfil",
+            idade: "18",
+            imagem: "https://via.placeholder.com/150",
+            hobbies: ["Leitura", "Esportes", "Música"],
+            corDeFundo: ""
+        };
+
+        function alterarNome() {
+            const novoNome = prompt("Digite o novo nome:");
+            if (novoNome) {
+                document.getElementById("profileName").textContent = "Nome: " + novoNome;
+            }
+        }
+
+        function adicionarHobby() {
+            const novoHobby = prompt("Digite um novo hobby:");
+            if (novoHobby) {
+                const li = document.createElement("li");
+                li.className = "list-group-item d-flex justify-content-between align-items-center";
+                li.innerHTML = `
+                    ${novoHobby}
+                    <button class="btn btn-sm btn-danger" onclick="removerHobby(this)">Excluir</button>
+                `;
+                document.getElementById("hobbiesList").appendChild(li);
+            }
+        }
+
+        function mudarCorDeFundo() {
+            const cores = ["#f8d7da", "#d1ecf1", "#d4edda", "#ffb3cd", "#cce5ff"];
+            const corAleatoria = cores[Math.floor(Math.random() * cores.length)];
+            document.getElementById("profileCard").style.backgroundColor = corAleatoria;
+        }
+
+        function alterarFoto(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("profileImage").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removerHobby(botao) {
+            const li = botao.parentElement;
+            li.remove();
+        }
+
+        function resetarPagina() {
+            document.getElementById("profileName").textContent = "Nome: " + estadoInicial.nome;
+            document.getElementById("profileAge").textContent = "Idade: " + estadoInicial.idade;
+            document.getElementById("profileImage").src = estadoInicial.imagem;
+
+            const hobbiesList = document.getElementById("hobbiesList");
+            hobbiesList.innerHTML = "";
+            estadoInicial.hobbies.forEach(hobby => {
+                const li = document.createElement("li");
+                li.className = "list-group-item d-flex justify-content-between align-items-center";
+                li.innerHTML = `
+                    ${hobby}
+                    <button class="btn btn-sm btn-danger" onclick="removerHobby(this)">Excluir</button>
+                `;
+                hobbiesList.appendChild(li);
+            });
+
+            document.getElementById("profileCard").style.backgroundColor = estadoInicial.corDeFundo;
+        }
+    </script>
+</body>
+</html>
